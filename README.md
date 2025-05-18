@@ -1,73 +1,116 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# CourseForge API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Back‑end service for **CourseForge** – a self‑hosted e‑learning platform where courses are structured as *course → section → lesson* and each lesson is delivered primarily as video.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## ✨ Key features
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+* **Video‑centric learning** – each lesson points to a protected video file and optional supplementary materials.
+* **Section quizzes** – configurable tests unlock the next section only after the learner passes.
+* **Progress tracking** – per‑user completion stats and resume‑from‑last‑time timestamps.
+* **Escrow certificates** – signed issuer JSON for completed courses.
+* **Role‑based access** – admins, instructors and students with JWT auth.
+* **REST + Swagger** – automatic OpenAPI docs generated from Nest JS decorators.
 
-## Installation
+---
 
-```bash
-$ npm install
-```
+## 🛠 Tech stack
 
-## Running the app
+| Layer            | Tech / Package                              |
+| ---------------- | ------------------------------------------- |
+| Framework        | **Nest JS 10** (`@nestjs/*`)|
+| Database         | MongoDB 6, Mongoose ODM                     |
+| Caching          | Redis 7 (optional)                          |
+| Storage          | S3‑compatible (AWS S3 / MinIO)              |
+| Auth             | JWT Bearer tokens                           |
+| Validation       | `class‑validator` / `class‑transformer`     |
+| Dev & tooling    | pnpm, TypeScript, ESLint, Prettier, Husky   |
+| CI               | GitHub Actions → lint → test → build        |
+
+---
+
+## 🚀 Quick start
 
 ```bash
-# development
-$ npm run start
+# clone & install deps
+git clone https://github.com/kurkul608/digital-producer-back.git
+cd digital-producer-back
+pnpm install
 
-# watch mode
-$ npm run start:dev
+# start MongoDB in Docker (optional helper)
+docker compose up -d mongo
 
-# production mode
-$ npm run start:prod
+# run migrations / seed demo data
+pnpm seed
+
+# start dev server with hot‑reload
+pnpm start:dev
 ```
 
-## Test
+The API listens on **http://localhost:4000** (port configurable).
+
+---
+
+## 🔑 Environment variables
+
+Copy template and fill in secrets:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+cp .env.example .env.local
 ```
 
-## Support
+---
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## 📂 Folder structure (trimmed)
 
-## Stay in touch
+```
+src/
+ ├─ modules/
+ │   ├─ course/
+ │   ├─ section/
+ │   ├─ lesson/
+ │   ├─ quiz/
+ │   └─ auth/
+ ├─ common/           # pipes, guards, filters
+ ├─ configs/          # configuration providers
+ └─ main.ts           # bootstrap
+prisma/               # if you migrate to Prisma later
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+---
 
-## License
+## 🧪 Scripts
 
-Nest is [MIT licensed](LICENSE).
+| Command            | Action                                 |
+| ------------------ | -------------------------------------- |
+| `pnpm start:dev`   | Nest‑CLI watch mode                    |
+| `pnpm build`       | Compile to `dist/`                     |
+| `pnpm start`       | Start compiled build                   |
+| `pnpm test`        | Jest unit tests                        |
+| `pnpm lint`        | ESLint                                 |
+| `pnpm seed`        | Load demo course + user credentials    |
+
+---
+
+## 🚧 Roadmap
+
+- [ ] Replace Mongoose with Prisma MongoDB connector
+- [ ] Add HLS transcoding pipeline for large videos
+- [ ] WebSocket live‑progress updates
+- [ ] OAuth2 provider (Google, GitHub)
+
+---
+
+## 🤝 Contributing
+
+1. Fork → `git checkout -b feat/amazing`
+2. `pnpm install && pnpm lint && pnpm test`
+3. Commit using Conventional Commits.
+4. Open a PR describing what and why.
+
+---
+
+## 📝 License
+
+Distributed under the MIT License – see **LICENSE** for details.
